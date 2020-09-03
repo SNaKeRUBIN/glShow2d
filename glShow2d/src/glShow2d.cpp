@@ -79,22 +79,22 @@ constexpr char* GetTextFragShader()
 }
 } // namespace
 
-struct MyDisplay::Display::uivec2
+struct glShow::glShow2d::uivec2
 {
     unsigned x, y;
 };
 
-struct MyDisplay::Display::ivec2
+struct glShow::glShow2d::ivec2
 {
     int x, y;
 };
 
-struct MyDisplay::Display::vec3
+struct glShow::glShow2d::vec3
 {
     float r, g, b;
 };
 
-struct MyDisplay::Display::Character
+struct glShow::glShow2d::Character
 {
     uivec2 Size;   // Size of glyph
     ivec2 Bearing; // Offset from baseline to left/top of glyph
@@ -102,7 +102,7 @@ struct MyDisplay::Display::Character
     uivec2 Offset; // Offset to char in tex atlas in range [0.0, 1.0]
 };
 
-struct MyDisplay::Display::TextToRender
+struct glShow::glShow2d::TextToRender
 {
     std::string text;
     float x, y;
@@ -110,8 +110,8 @@ struct MyDisplay::Display::TextToRender
     vec3 color;
 };
 
-MyDisplay::Display::Display(unsigned const width, unsigned const height,
-                            std::string const& windowName)
+glShow::glShow2d::glShow2d(unsigned const width, unsigned const height,
+                           std::string const& windowName)
     : mWidth{width}, mHeight{height}, mWindowName{windowName},
       mTextRendererInitialized{false}
 {
@@ -121,9 +121,9 @@ MyDisplay::Display::Display(unsigned const width, unsigned const height,
     CreateTextureShaderProgram();
 }
 
-MyDisplay::Display::Display(unsigned const width, unsigned const height,
-                            std::string const& windowName,
-                            std::string const& pathToFont)
+glShow::glShow2d::glShow2d(unsigned const width, unsigned const height,
+                           std::string const& windowName,
+                           std::string const& pathToFont)
     : mWidth{width}, mHeight{height}, mWindowName{windowName},
       mTextRendererInitialized{true}
 {
@@ -136,13 +136,12 @@ MyDisplay::Display::Display(unsigned const width, unsigned const height,
     CreateTextShaderProgram();
 }
 
-void MyDisplay::Display::EnableOrReInitTextRenderer(
-    std::string const& pathToFont)
+void glShow::glShow2d::EnableOrReInitTextRenderer(std::string const& pathToFont)
 {
     InitTextRenderer(pathToFont);
 }
 
-MyDisplay::Display::~Display()
+glShow::glShow2d::~glShow2d()
 {
     glDeleteVertexArrays(1, &mTextureVAO);
     glDeleteBuffers(1, &mTextureVBO);
@@ -156,8 +155,8 @@ MyDisplay::Display::~Display()
     glfwTerminate();
 }
 
-void MyDisplay::Display::Draw(unsigned char const* const data, int const width,
-                              int const height, int const nChannels)
+void glShow::glShow2d::Draw(unsigned char const* const data, int const width,
+                            int const height, int const nChannels)
 {
     if (!glfwWindowShouldClose(mWindow.get()))
     {
@@ -188,9 +187,9 @@ void MyDisplay::Display::Draw(unsigned char const* const data, int const width,
     }
 }
 
-void MyDisplay::Display::DrawText(std::string const& text, float const x,
-                                  float const y, float const scale,
-                                  TextColor const& color)
+void glShow::glShow2d::DrawText(std::string const& text, float const x,
+                                float const y, float const scale,
+                                TextColor const& color)
 {
     if (!mTextRendererInitialized)
     {
@@ -203,9 +202,9 @@ void MyDisplay::Display::DrawText(std::string const& text, float const x,
     }
 }
 
-void MyDisplay::Display::LoadTexture(unsigned char const* const data,
-                                     int const width, int const height,
-                                     int const nChannels)
+void glShow::glShow2d::LoadTexture(unsigned char const* const data,
+                                   int const width, int const height,
+                                   int const nChannels)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mImageTexture);
@@ -231,8 +230,8 @@ void MyDisplay::Display::LoadTexture(unsigned char const* const data,
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLuint MyDisplay::Display::CompileShader(char const* const shaderCode,
-                                         GLenum const shaderType)
+GLuint glShow::glShow2d::CompileShader(char const* const shaderCode,
+                                       GLenum const shaderType)
 {
     GLuint const shader = glCreateShader(shaderType);
     glShaderSource(shader, 1, &shaderCode, NULL);
@@ -269,8 +268,8 @@ GLuint MyDisplay::Display::CompileShader(char const* const shaderCode,
     return shader;
 }
 
-GLuint MyDisplay::Display::LinkProgram(GLuint const vertexShader,
-                                       GLuint const fragShader)
+GLuint glShow::glShow2d::LinkProgram(GLuint const vertexShader,
+                                     GLuint const fragShader)
 {
     GLuint const shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -292,7 +291,7 @@ GLuint MyDisplay::Display::LinkProgram(GLuint const vertexShader,
     return shaderProgram;
 }
 
-void MyDisplay::Display::InitGLFWAndGlad()
+void glShow::glShow2d::InitGLFWAndGlad()
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -319,7 +318,7 @@ void MyDisplay::Display::InitGLFWAndGlad()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void MyDisplay::Display::LoadTextureVertexArray()
+void glShow::glShow2d::LoadTextureVertexArray()
 {
     std::array<float, 4 * 4> const vertices = {
         // clang-format off
@@ -366,7 +365,7 @@ void MyDisplay::Display::LoadTextureVertexArray()
     glGenTextures(1, &mImageTexture);
 }
 
-void MyDisplay::Display::CreateTextureShaderProgram()
+void glShow::glShow2d::CreateTextureShaderProgram()
 {
     constexpr char* vShaderCode = GetTextureVertexShader();
     constexpr char* fShaderCode = GetTextureFragShader();
@@ -383,7 +382,7 @@ void MyDisplay::Display::CreateTextureShaderProgram()
     glUniform1i(glGetUniformLocation(mTextureShaderProgram, "tex"), 0);
 }
 
-void MyDisplay::Display::CreateTextShaderProgram()
+void glShow::glShow2d::CreateTextShaderProgram()
 {
     constexpr char* vShaderCode = GetTextVertexShader();
     constexpr char* fShaderCode = GetTextFragShader();
@@ -409,7 +408,7 @@ void MyDisplay::Display::CreateTextShaderProgram()
                        1, GL_FALSE, projectionText2.data());
 }
 
-void MyDisplay::Display::InitTextRenderer(std::string const& pathToFont)
+void glShow::glShow2d::InitTextRenderer(std::string const& pathToFont)
 {
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
@@ -495,7 +494,7 @@ void MyDisplay::Display::InitTextRenderer(std::string const& pathToFont)
     glGenVertexArrays(1, &mTextVAO);
 }
 
-void MyDisplay::Display::RenderText(TextToRender const& textStuct)
+void glShow::glShow2d::RenderText(TextToRender const& textStuct)
 {
     glUseProgram(mTextShaderProgram);
     glUniform3f(glGetUniformLocation(mTextShaderProgram, "textColor"),

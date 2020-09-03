@@ -13,7 +13,7 @@
 #include <vector>
 #include <iostream>
 
-namespace MyDisplay
+namespace glShow
 {
 namespace detail
 {
@@ -29,14 +29,14 @@ class WindowClosedError final : public std::runtime_error
     WindowClosedError() : runtime_error("Window closed.\n") {}
 };
 
-class Display final
+class glShow2d final
 {
   public:
-    Display(unsigned const width, unsigned const height,
-            std::string const& windowName);
+    glShow2d(unsigned const width, unsigned const height,
+             std::string const& windowName);
 
-    Display(unsigned const width, unsigned const height,
-            std::string const& windowName, std::string const& pathToFont);
+    glShow2d(unsigned const width, unsigned const height,
+             std::string const& windowName, std::string const& pathToFont);
 
     void Draw(unsigned char const* const data, int const width,
               int const height, int const nChannels);
@@ -51,7 +51,7 @@ class Display final
 
     void EnableOrReInitTextRenderer(std::string const& pathToFont);
 
-    ~Display();
+    ~glShow2d();
 
   private:
     struct uivec2;
@@ -94,4 +94,4 @@ class Display final
     GLuint mAtlasWidth, mAtlasHeight;
     std::vector<TextToRender> mTextsToRender;
 };
-} // namespace MyDisplay
+} // namespace glShow

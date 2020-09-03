@@ -10,7 +10,7 @@
 int main()
 {
     std::string const fontPath{"D:\\Programming\\OpenGL\\fonts\\bitter.otf"};
-    MyDisplay::Display display(800, 600, "new window", fontPath);
+    glShow::glShow2d display(800, 600, "new window", fontPath);
     std::string const filename{"C:\\Users\\SNaKeRUBIN\\Desktop\\blue.png"};
 
     // flip images for stb_image
