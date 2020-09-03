@@ -1,0 +1,7 @@
+# IDE-specific
+.vs/
+.vscode/
+
+# Builds
+build/
+ThirdParty/build
