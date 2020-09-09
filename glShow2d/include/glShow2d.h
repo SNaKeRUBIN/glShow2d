@@ -6,12 +6,12 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <memory>
 #include <array>
 #include <chrono>
-#include <map>
-#include <vector>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <vector>
 
 namespace glShow
 {

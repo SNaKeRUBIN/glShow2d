@@ -51,7 +51,7 @@ target_include_directories(glShow2d PUBLIC
 
 target_link_libraries(glShow2d glad::glad freetype glfw)
 
-set(glShow2dTarget glShow2dTargets)
+set(glShow2dTarget glShow2dConfig)
 install(TARGETS glShow2d
     EXPORT ${glShow2dTarget}
     ARCHIVE DESTINATION lib
