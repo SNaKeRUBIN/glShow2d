@@ -25,6 +25,8 @@ if(ret EQUAL "1")
     message(FATAL_ERROR "Third Party Build Failed")
 endif()
 
+option (BUILD_EXAMPLE "Build included example" OFF)
+
 find_package(glad
     REQUIRED
     PATHS ${EXTERNAL_INSTALL_DIR}
@@ -88,4 +90,6 @@ install(EXPORT ${glShow2dTarget}
     DESTINATION lib/cmake/glShow2d
 )
 
-add_subdirectory(example)
+if (BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()
