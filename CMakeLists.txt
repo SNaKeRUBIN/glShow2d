@@ -15,15 +15,23 @@ execute_process(
 execute_process(
     COMMAND ${CMAKE_COMMAND} --build . --config Release
     WORKING_DIRECTORY ${THIRD_PARTY_BUILD_DIR}
+    RESULT_VARIABLE ret
+    ERROR_VARIABLE OUTPUT1
+    OUTPUT_VARIABLE OUTPUT1
 )
 
-find_package(glad 
+if(ret EQUAL "1")
+    message("${OUTPUT1}")
+    message(FATAL_ERROR "Third Party Build Failed")
+endif()
+
+find_package(glad
     REQUIRED
     PATHS ${EXTERNAL_INSTALL_DIR}
     NO_DEFAULT_PATH
 )
 
-find_package(freetype 
+find_package(freetype
     REQUIRED
     PATHS ${EXTERNAL_INSTALL_DIR}
     NO_DEFAULT_PATH
@@ -35,13 +43,9 @@ find_package(glfw3
     NO_DEFAULT_PATH
 )
 
-add_library(glShow2d STATIC 
+add_library(glShow2d STATIC
     glShow2d/src/glShow2d.cpp
-)
-
-set_target_properties(glShow2d 
-    PROPERTIES 
-        PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/glShow2d/include/glShow2d.h
+    glShow2d/src/glShow2dImpl.cpp
 )
 
 target_include_directories(glShow2d PUBLIC
@@ -50,6 +54,27 @@ target_include_directories(glShow2d PUBLIC
 )
 
 target_link_libraries(glShow2d glad::glad freetype glfw)
+
+set_target_properties(glShow2d
+    PROPERTIES
+        PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/glShow2d/include/glShow2d.h
+        INTERFACE_LINK_LIBRARIES "" # overwrite
+)
+
+if(NOT WIN32)
+    message(FATAL_ERROR "Not implemented on non Windows platform")
+    # todo
+    #   add support for using lib tool for linux
+endif()
+
+# overwrite the created static lib with a combined static lib
+set(LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}glShow2d${CMAKE_STATIC_LIBRARY_SUFFIX})
+add_custom_target(glShow2dCombine ALL
+    COMMAND lib.exe /OUT:${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${LIBNAME}
+                $<TARGET_FILE:glShow2d> $<TARGET_FILE:glad::glad>
+                $<TARGET_FILE:freetype> $<TARGET_FILE:glfw>
+    DEPENDS glShow2d
+)
 
 set(glShow2dTarget glShow2dConfig)
 install(TARGETS glShow2d
